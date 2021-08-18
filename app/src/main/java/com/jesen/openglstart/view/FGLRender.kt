@@ -15,8 +15,8 @@ class FGLRender(glView: GLView) : GLSurfaceView.Renderer {
         shape = Triangle()
     }
 
-    override fun onSurfaceChanged(p0: GL10?, p1: Int, p2: Int) {
-
+    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        shape.onSurfaceChanged(gl,width,height)
     }
 
     // 绘制，不断地被调用
