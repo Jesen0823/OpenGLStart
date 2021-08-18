@@ -15,8 +15,6 @@ public class Triangle {
 
     int mProgram;
 
-    private FloatBuffer vertexBuffer;
-
     // 用于创建顶点着色器的语句，类似native函数
     private String vertextShaderCode =
             "attribute vec4 vPosition;\n" +
@@ -39,6 +37,8 @@ public class Triangle {
             0.5f, -0.5f, 0.0f,
     };
     float colors[] = {1.0f, 0.8f, 0.2f, 1.0f};
+
+    private FloatBuffer vertexBuffer;
 
     // 声明三个矩阵变换参数
     private float[] mViewMatrix = new float[16];
