@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "OpenGLStart"
 include ':app'
+include ':MeiYanCamera'
