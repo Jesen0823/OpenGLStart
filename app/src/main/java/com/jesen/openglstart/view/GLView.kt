@@ -10,7 +10,8 @@ import com.jesen.openglstart.view.FGLRender
  */
 class GLView : GLSurfaceView {
 
-    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?) : super(context, null) {
+    }
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         setEGLContextClientVersion(2) // 使用的版本

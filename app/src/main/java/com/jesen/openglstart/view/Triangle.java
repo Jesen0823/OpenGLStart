@@ -20,7 +20,7 @@ public class Triangle {
             "attribute vec4 vPosition;\n" +
                     "uniform mat4 vMatrix;\n" +
                     "void main(){\n" +
-                    "gl_Position=vMatrix*vPosition;\n" +
+                    "gl_Position=vMatrix * vPosition;\n" +
                     "}";
 
     // 片元着色器
@@ -29,7 +29,7 @@ public class Triangle {
             "void main(){\n" +
             "gl_FragColor=vColor;\t\n" +
             "}";
-// 初始化
+    // 初始化
 
     static float triangleCoords[] = {
             0.5f, 0.5f, 0.0f,
@@ -86,6 +86,7 @@ public class Triangle {
 
         // 类似于锁
         GLES20.glEnableVertexAttribArray(mPositionHandle);
+        // 顶点数量3个
         GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
                 3 * 4, vertexBuffer);
         // 处理颜色
@@ -99,13 +100,14 @@ public class Triangle {
 
     // 矩阵坐标转换写法
     public void onSurfaceChanged(GL10 gl,int width, int height) {
+        // 宽高比
         float ratio = 1.f * width/height;
         // 投影矩阵，投影的面
-        Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,0,1,3,120);
+        Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,-1,1,3,120);
         // 相机（观察者）
         Matrix.setLookAtM(mViewMatrix,0,0,0,7, // 相机坐标
-                0f,0f, 0f,  // 目标物坐标
-                0f, 1.0f,1.0f); // 相机观察的方向
+                0f,0f, 0f,  // 目标物中心坐标
+                0f, 1.0f,0.0f); // 相机观察的方向
         // 计算变换矩阵
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix,0,mViewMatrix,0);
 

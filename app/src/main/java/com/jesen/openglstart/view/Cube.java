@@ -14,7 +14,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class Cube {
 
-    int mProgram;
+    private int mProgram;
 
     // 用于创建顶点着色器的语句，类似native函数
     private String vertextShaderCode =
@@ -36,34 +36,34 @@ public class Cube {
 // 初始化
 
     static float cubePositions[] = {
-            1.0f, 1.0f, 1.0f, // 正面左上0
-            -1.0f, -1.0f, 1.0f, // 正面左下1
-            1.0f, -1.0f, 1.0f, // 正面右下2
-            1.0f, 1.0f, 1.0f,  //正面石上3
-            -1.0f, 1.0f, -1.0f, //反面左上4
-            -1.0f, -1.0f, -1.0f, // 反面左下5
-            1.0f, -1.0f, -1.0f, // 反面右下6
-            1.0f, 1.0f, -1.0f,  //反面右上7
+            -1.0f,1.0f,1.0f,    //正面左上0
+            -1.0f,-1.0f,1.0f,   //正面左下1
+            1.0f,-1.0f,1.0f,    //正面右下2
+            1.0f,1.0f,1.0f,     //正面右上3
+            -1.0f,1.0f,-1.0f,    //反面左上4
+            -1.0f,-1.0f,-1.0f,   //反面左下5
+            1.0f,-1.0f,-1.0f,    //反面右下6
+            1.0f,1.0f,-1.0f,     //反面右上7
     };
 
     float colors[] = {
-            0f, 1f, 0f, 1f,
-            0f, 1f, 0f, 1f,
-            0f, 1f, 0f, 1f,
-            0f, 1f, 0f, 1f,
-            1f, 0f, 0f, 1f,
-            1f, 0f, 0f, 1f,
-            1f, 0f, 0f, 1f,
-            1f, 0f, 0f, 1f,
+            0f,1f,0f,1f,
+            0f,1f,0f,1f,
+            0f,1f,0f,1f,
+            0f,1f,0f,1f,
+            1f,0f,0f,1f,
+            1f,0f,0f,1f,
+            1f,0f,0f,1f,
+            1f,0f,0f,1f,
     };
 
     final short index[] = {
-            6, 7, 4, 6, 4, 5, // 后面
-            6, 3, 7, 6, 2, 3, // 右面
-            6, 5, 1, 6, 1, 2, // 下面
-            0, 3, 2, 0, 2, 1, // 正面
-            0, 1, 5, 0, 5, 4, // 左面
-            0, 7, 3, 0, 4, 7, // 上面
+            6,7,4,6,4,5,    //后面
+            6,3,7,6,2,3,    //右面
+            6,5,1,6,1,2,    //下面
+            0,3,2,0,2,1,    //正面
+            0,1,5,0,5,4,    //左面
+            0,7,3,0,4,7,    //上面
     };
 
     private FloatBuffer vertexBuffer,colorBuffer;
@@ -73,7 +73,7 @@ public class Cube {
     private float[] mViewMatrix = new float[16];
     private float[] mProjectMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
-
+    final int COORDS_PER_VERTEX = 3;
 
     public Cube() {
         // ByteBuffer在GPU里面
@@ -98,21 +98,38 @@ public class Cube {
 
 
         // 创建顶点着色器,在GPU编译
-        int vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-        GLES20.glShaderSource(vertexShader, vertextShaderCode);
-        GLES20.glCompileShader(vertexShader);
-
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER,
+                vertextShaderCode);
         // 创建片元着色器,在GPU编译
-        int fragShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        GLES20.glShaderSource(fragShader, fragmentShaderCode);
-        GLES20.glCompileShader(fragShader);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,
+                fragmentShaderCode);
 
-        // 两个着色器放入统一程序管理
+        //创建一个空的OpenGLES程序
         mProgram = GLES20.glCreateProgram();
+        //将顶点着色器加入到程序
         GLES20.glAttachShader(mProgram, vertexShader);
-        GLES20.glAttachShader(mProgram, fragShader);
-        // 链接到着色器程序
+        //将片元着色器加入到程序中
+        GLES20.glAttachShader(mProgram, fragmentShader);
+        //连接到着色器程序
         GLES20.glLinkProgram(mProgram);
+
+        //获取片元着色器的vColor成员的句柄
+        int mColorHandle = GLES20.glGetAttribLocation(mProgram, "aColor");
+        //设置绘制图形的颜色
+        GLES20.glEnableVertexAttribArray(mColorHandle);
+        GLES20.glVertexAttribPointer(mColorHandle,4,
+                GLES20.GL_FLOAT,false,
+                0,colorBuffer);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, index.length, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+    }
+
+    private int loadShader(int type, String shaderCode) {
+        //根据type创建顶点着色器或者片元着色器
+        int shader = GLES20.glCreateShader(type);
+        //将资源加入到着色器中，并编译
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+        return shader;
     }
 
     // 渲染
@@ -120,35 +137,40 @@ public class Cube {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
 
-        // 传入矩阵到参数"vMatrix"
+        // 获取变换矩阵vMatrix成员句柄，传入矩阵到参数"vMatrix"
         int mMatrixHandler = GLES20.glGetUniformLocation(mProgram, "vMatrix");
         GLES20.glUniformMatrix4fv(mMatrixHandler, 1, false, mMVPMatrix, 0);
 
         int mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
 
-        // 类似于锁
+        //启用三角形顶点的句柄
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-        GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
+        //准备三角形的坐标数据
+        GLES20.glVertexAttribPointer(mPositionHandle, 3,
+                GLES20.GL_FLOAT, false,
                 0, vertexBuffer);
-        // 处理颜色
-        int mColorHandle = GLES20.glGetUniformLocation(mProgram, "aColor");
-        GLES20.glUniform4fv(mColorHandle,2,colors,0);
+        //获取片元着色器的vColor成员的句柄
+        int mColorHandle = GLES20.glGetAttribLocation(mProgram, "aColor");
         GLES20.glEnableVertexAttribArray(mColorHandle);
-        GLES20.glVertexAttribPointer(mColorHandle,4,GLES20.GL_FLOAT,false,0,colorBuffer);
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES,index.length,GLES20.GL_UNSIGNED_SHORT,indexBuffer);
-
+        GLES20.glVertexAttribPointer(mColorHandle,4,
+                GLES20.GL_FLOAT,false,
+                0,colorBuffer);
+        //索引法绘制正方体
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES,index.length, GLES20.GL_UNSIGNED_SHORT,indexBuffer);
+        //禁止顶点数组的句柄
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 
     // 矩阵坐标转换写法
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        //计算宽高比
         float ratio = 1.f * width / height;
         // 投影矩阵，投影的面
         Matrix.frustumM(mProjectMatrix, 0, -ratio, ratio, -1, 1, 3, 20);
         // 相机（观察者）
         Matrix.setLookAtM(mViewMatrix, 0, 5.0f, 5.0f, 10.0f, // 相机坐标
                 0f, 0f, 0f,  // 目标物坐标
-                0f, 1.0f, 1.0f); // 相机观察的方向
+                0f, 1.0f, 0.0f); // 相机观察的方向
         // 计算变换矩阵
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix, 0, mViewMatrix, 0);
 
