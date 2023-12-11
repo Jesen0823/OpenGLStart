@@ -20,3 +20,4 @@ rootProject.name = "OpenGLStart"
 include ':app'
 include ':MeiYanCamera'
 include ':glfilter'
+include ':glmediafilter'

@@ -5,7 +5,7 @@ attribute vec4 vCoord;
 
 uniform vec4 vMatrix;
 
-// 像素坐标
+// 像素坐标,在顶点着色器中没有实际意义，主要用于片元
 varying vec2 aCoord;
 
 void main() {
