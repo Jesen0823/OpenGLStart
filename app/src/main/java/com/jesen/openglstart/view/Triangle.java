@@ -36,6 +36,8 @@ public class Triangle {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
     };
+
+    // rgba
     float colors[] = {1.0f, 0.8f, 0.2f, 1.0f};
 
     private FloatBuffer vertexBuffer;
@@ -58,7 +60,9 @@ public class Triangle {
 
         // 创建顶点着色器,在GPU编译
         int shader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+        // 发送顶点程序源码
         GLES20.glShaderSource(shader, vertextShaderCode);
+        // 编译
         GLES20.glCompileShader(shader);
 
         // 创建片元着色器,在GPU编译
@@ -81,16 +85,18 @@ public class Triangle {
         // 传入矩阵到参数"vMatrix"
         int mMatrixHandler = GLES20.glGetUniformLocation(mProgram,"vMatrix");
         GLES20.glUniformMatrix4fv(mMatrixHandler,1,false,mMVPMatrix,0);
-
+        // 得到vPosition，将顶点数据vertexBuffer塞进去
         int mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
-
         // 类似于锁
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-        // 顶点数量3个
+        // 顶点数量3个，stride一行的数据字节量 3*vec4
         GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false,
                 3 * 4, vertexBuffer);
+
+
         // 处理颜色
         int mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
+        //GLES20.glUniform4fv(mColorHandle, 1, colors, 0);
         GLES20.glUniform4fv(mColorHandle, 1, colors, 0);
         // 最终绘制
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
@@ -110,6 +116,7 @@ public class Triangle {
                 0f, 1.0f,0.0f); // 相机观察的方向
         // 计算变换矩阵
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix,0,mViewMatrix,0);
-
+        // 可有可不有
+        GLES20.glViewport(0,0,width,height);
     }
 }
