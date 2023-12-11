@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var view: CameraView
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            view.startRender()
+
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +32,11 @@ class MainActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-        } else {
-            view.startRender()
         }
+    }
+
+    override fun onDestroy() {
+        view.release()
+        super.onDestroy()
     }
 }

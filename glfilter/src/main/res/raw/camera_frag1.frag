@@ -1,4 +1,3 @@
-#version 200
 #extension GL_OES_EGL_image_external: require
 //必须 写的 固定的  意思   用采样器
 //所有float类型数据的精度是lowp

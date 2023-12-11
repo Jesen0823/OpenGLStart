@@ -13,6 +13,7 @@ object OpenGlUtil {
         val sb = StringBuilder()
         br.forEachLine {
             sb.append(it)
+            sb.append("\n")
         }
         return sb.toString()
     }

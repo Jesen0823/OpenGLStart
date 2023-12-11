@@ -1,4 +1,3 @@
-#version 200
 // 声明采样器
 #extension GL_OES_EGL_image_external: require
 
