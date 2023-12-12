@@ -34,7 +34,7 @@ class EGLEnv(context: Context, gLContext: EGLContext, surface: Surface, width: I
         }
 
         // 配置 属性选项
-        val configAttribs = intArrayOf(
+        val configAttributes = intArrayOf(
             EGL14.EGL_RED_SIZE, 8,  //颜色缓冲区中红色位数
             EGL14.EGL_GREEN_SIZE, 8,  //颜色缓冲区中绿色位数
             EGL14.EGL_BLUE_SIZE, 8,
@@ -43,10 +43,10 @@ class EGLEnv(context: Context, gLContext: EGLContext, surface: Surface, width: I
             EGL14.EGL_NONE
         )
         val numConfigs = IntArray(1)
-        val configs: Array<EGLConfig?> = arrayOfNulls<EGLConfig>(1)
+        val configs: Array<EGLConfig?> = arrayOfNulls(1)
         //EGL 根据属性选择一个配置
         if (!EGL14.eglChooseConfig(
-                mEglDisplay, configAttribs, 0, configs, 0, configs.size,
+                mEglDisplay, configAttributes, 0, configs, 0, configs.size,
                 numConfigs, 0
             )
         ) {

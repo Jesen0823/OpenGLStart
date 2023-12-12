@@ -8,7 +8,6 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.google.common.util.concurrent.ListenableFuture
 
 class CameraXHelper {
     fun startCamera(context: Context, surfaceProvider: Preview.SurfaceProvider) {
@@ -25,15 +24,15 @@ class CameraXHelper {
             preview.setSurfaceProvider(surfaceProvider)
             cameraProvider.unbindAll()
 
-            val camera =
+            /*val camera =
                 cameraProvider.bindToLifecycle(
                     context as LifecycleOwner,
                     CameraSelector.DEFAULT_BACK_CAMERA,
                     imageCapture,
                     preview
-                )
-            val cameraInfo = camera.cameraInfo
-            val cameraControl = camera.cameraControl
+                )*/
+            //val cameraInfo = camera.cameraInfo
+            //val cameraControl = camera.cameraControl
         }, ContextCompat.getMainExecutor(context))
     }
 }

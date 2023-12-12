@@ -15,6 +15,7 @@ import androidx.camera.core.SurfaceRequest
 import com.example.glmediafilter.MediaRecorder
 import com.example.glmediafilter.filter.CameraFilter
 import com.example.glmediafilter.filter.RecordFilter
+import com.example.glmediafilter.filter.SoulFilter
 import java.io.File
 import java.util.concurrent.Executors
 import javax.microedition.khronos.egl.EGLConfig
@@ -27,6 +28,7 @@ class CameraRender(private val context: Context, private val callback: Callback)
     private val tag = "CameraRender"
     private var mCameraTexture: SurfaceTexture? = null
     private var cameraFilter: CameraFilter? = null
+    private var soulFilter: SoulFilter? = null
     private var recordFilter: RecordFilter? = null
     private var mediaRecorder: MediaRecorder? = null
     private val textures = IntArray(1)
@@ -35,11 +37,11 @@ class CameraRender(private val context: Context, private val callback: Callback)
     private val outFile =
         File(Environment.getExternalStorageDirectory(), "outFilter.mp4")
 
-    fun startRecord(speed:Float){
+    fun startRecord(speed: Float) {
         mediaRecorder?.start(speed)
     }
 
-    fun stopRecord(){
+    fun stopRecord() {
         mediaRecorder?.stop()
     }
 
@@ -48,12 +50,14 @@ class CameraRender(private val context: Context, private val callback: Callback)
         gl?.let {
             mCameraTexture?.attachToGLContext(textures[0])
             mCameraTexture?.setOnFrameAvailableListener(this)
-            //it.glGenTextures(textures.size, textures, 0)
+            it.glGenTextures(textures.size, textures, 0)
             mCameraTexture = SurfaceTexture(textures[0])
             cameraFilter = CameraFilter(context)
             recordFilter = RecordFilter(context)
+            soulFilter = SoulFilter(context)
             if (outFile.exists()) outFile.delete()
-            mediaRecorder = MediaRecorder(context,outFile.absolutePath,EGL14.eglGetCurrentContext(),480,640)
+            mediaRecorder =
+                MediaRecorder(context, outFile.absolutePath, EGL14.eglGetCurrentContext(), 480, 640)
         }
     }
 
@@ -61,24 +65,26 @@ class CameraRender(private val context: Context, private val callback: Callback)
         callback.onSurfaceChanged()
         recordFilter?.setSize(width, height)
         cameraFilter?.setSize(width, height)
+        soulFilter?.setSize(width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
         Log.d(tag, "CameraRender onDrawFrame, thread:${Thread.currentThread().name}")
 
-        //if (gl == null || mCameraTexture == null) return
-        //gl.glClearColor(0f, 0f, 0f, 0f)
-        //gl.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+        if (gl == null || mCameraTexture == null) return
+        gl.glClearColor(0f, 0f, 0f, 0f)
+        gl.glClear(GLES20.GL_COLOR_BUFFER_BIT)
         // 此时更新摄像头的数据已经给了gpu
         mCameraTexture!!.updateTexImage()
         mCameraTexture!!.getTransformMatrix(mtx)
         cameraFilter?.setTransformMatrix(mtx)
 
         // FBO所在图层的纹理id
-        val cfID = cameraFilter?.onDrawFrame(textures[0])
-        val edID = recordFilter?.onDrawFrame(cfID!!)
-        // 主动调用OenGL的数据
-        mediaRecorder?.fireFrame(edID!!,mCameraTexture!!.timestamp)
+        val cfID = cameraFilter?.onDrawFrame(textures[0]) // 特效
+        val slID = soulFilter?.onDrawFrame(cfID!!) // 特效
+        val edID = recordFilter?.onDrawFrame(slID!!) // 无特效，渲染摄像头
+        // 主动调用OenGL的数据，编码存储
+        mediaRecorder?.fireFrame(edID!!, mCameraTexture!!.timestamp)
     }
 
     override fun onFrameAvailable(surfaceTexture: SurfaceTexture?) {

@@ -6,8 +6,8 @@ import android.opengl.GLES20
 open class AbsFBOFilter(context: Context, vertRes: Int, fragRes: Int) :
     SimpleFilter(context, vertRes, fragRes) {
 
-    private var frameBuffer: IntArray? = null
-    private var frameTexture: IntArray? = null
+    var frameBuffer: IntArray? = null
+    var frameTexture: IntArray? = null
 
     override fun setSize(width: Int, height: Int) {
         super.setSize(width, height)
@@ -35,7 +35,7 @@ open class AbsFBOFilter(context: Context, vertRes: Int, fragRes: Int) :
             // 缩小过滤
             GLES20.glTexParameteri(
                 GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_MAG_FILTER,
+                GLES20.GL_TEXTURE_MIN_FILTER,
                 GLES20.GL_LINEAR
             )
             // 告诉GPU纹理操作完成

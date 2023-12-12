@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.example.glmediafilter.R
 
-class RecordFilter(context: Context) : AbsFBOFilter(context, R.raw.base_vert, R.raw.base_frag) {
+class RecordFilter(context: Context) : SimpleFilter(context, R.raw.base_vert, R.raw.base_frag) {
     private val tag="RecordFilter"
 
     override fun onDrawFrame(textureId: Int): Int {

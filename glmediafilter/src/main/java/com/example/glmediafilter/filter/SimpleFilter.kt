@@ -22,8 +22,7 @@ open class SimpleFilter(context: Context, vertShaderRes: Int, fragShaderRes: Int
 
     // 纹理坐标
     private val textureBuffer: FloatBuffer =
-        ByteBuffer.allocateDirect(4 * 4 * 2).order(ByteOrder.nativeOrder())
-            .asFloatBuffer()
+        ByteBuffer.allocateDirect(4 * 4 * 2).order(ByteOrder.nativeOrder()).asFloatBuffer()
 
     // 变换矩阵
     private var matrix: FloatArray = FloatArray(16)
@@ -31,13 +30,13 @@ open class SimpleFilter(context: Context, vertShaderRes: Int, fragShaderRes: Int
      var program = -1
 
     // 定点着色器
-    private val VERTEX = floatArrayOf(
+    private val vertexArray = floatArrayOf(
         -1.0f, -1.0f,
         1.0f, -1.0f,
         -1.0f, 1.0f,
         1.0f, 1.0f
     )
-    private var TEXTURE = floatArrayOf(
+    private var textureArray = floatArrayOf(
         0.0f, 0.0f,
         1.0f, 0.0f,
         0.0f, 1.0f,
@@ -46,10 +45,10 @@ open class SimpleFilter(context: Context, vertShaderRes: Int, fragShaderRes: Int
 
     init {
         vertexBuffer.clear()
-        vertexBuffer.put(VERTEX)
+        vertexBuffer.put(vertexArray)
 
         textureBuffer.clear()
-        textureBuffer.put(TEXTURE)
+        textureBuffer.put(vertexArray)
 
         // 读取顶点着色器程序
         val vertexShader = OpenGlUtil.readRawTextFile(context, vertShaderRes)
@@ -91,11 +90,11 @@ open class SimpleFilter(context: Context, vertShaderRes: Int, fragShaderRes: Int
         GLES20.glEnableVertexAttribArray(vCoord)
 
         // 3.4 给片元着色器中的 采样器绑定
-        // 激活图层
+        // 激活图层第0个图层，总共32个图层
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         // 图像数据
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId)
-        // 传递参数
+        // 传递参数，第0个，vTexture此时有值了
         GLES20.glUniform1i(vTexture, 0)
 
         beforeDraw()

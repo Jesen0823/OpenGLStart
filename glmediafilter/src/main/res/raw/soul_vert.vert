@@ -7,5 +7,5 @@ varying vec2 aCoord;
 void main(){
     //内置变量： 把坐标点赋值给gl_position 就Ok了。
     gl_Position = vPosition;
-    aCoord = vCoord;
+    aCoord = vCoord.xy;
 }

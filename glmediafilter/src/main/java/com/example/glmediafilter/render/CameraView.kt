@@ -26,7 +26,7 @@ class CameraView(context: Context,attr: AttributeSet) : GLSurfaceView(context,at
         setEGLContextClientVersion(2)
         setRenderer(renderer)
         // 手动渲染模式
-        renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+        renderMode = RENDERMODE_WHEN_DIRTY
     }
     private var mSpeed = Speed.MODE_NORMAL
 
@@ -46,7 +46,6 @@ class CameraView(context: Context,attr: AttributeSet) : GLSurfaceView(context,at
             Speed.MODE_NORMAL -> 1f
             Speed.MODE_FAST -> 2f
             Speed.MODE_EXTRA_FAST -> 3f
-            else ->1f
         }
         renderer.startRecord(speed)
     }
