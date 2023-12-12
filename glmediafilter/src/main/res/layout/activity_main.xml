@@ -6,13 +6,98 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <com.example.glmediafilter.render.CameraView
+        android:id="@+id/camera_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioGroup
+            android:id="@+id/rg_speed"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/record_speed_background"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/btn_extra_slow"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="极慢"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/btn_slow"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="慢"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/btn_normal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="标准"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/btn_fast"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="快"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/btn_extra_fast"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="极快"
+                android:textColor="@drawable/record_speed_button_text" />
+        </RadioGroup>
+
+        <com.example.glmediafilter.utils.RecordButton
+            android:id="@+id/btn_record"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/record_button_background"
+            android:gravity="center"
+            android:text="按住拍" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
