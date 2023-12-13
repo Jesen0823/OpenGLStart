@@ -16,6 +16,7 @@ import com.example.glmediafilter.MediaRecorder
 import com.example.glmediafilter.filter.CameraFilter
 import com.example.glmediafilter.filter.RecordFilter
 import com.example.glmediafilter.filter.SoulFilter
+import com.example.glmediafilter.filter.SpiltFilter
 import java.io.File
 import java.util.concurrent.Executors
 import javax.microedition.khronos.egl.EGLConfig
@@ -31,6 +32,7 @@ class CameraRender(private val context: Context, private val callback: Callback)
     private var soulFilter: SoulFilter? = null
     private var recordFilter: RecordFilter? = null
     private var mediaRecorder: MediaRecorder? = null
+    private var spiltFilter:SpiltFilter?=null
     private val textures = IntArray(1)
     private val executor = Executors.newSingleThreadExecutor()
     private val mtx = FloatArray(16)
@@ -55,6 +57,7 @@ class CameraRender(private val context: Context, private val callback: Callback)
             cameraFilter = CameraFilter(context)
             recordFilter = RecordFilter(context)
             soulFilter = SoulFilter(context)
+            spiltFilter = SpiltFilter(context)
             if (outFile.exists()) outFile.delete()
             mediaRecorder =
                 MediaRecorder(context, outFile.absolutePath, EGL14.eglGetCurrentContext(), 480, 640)
@@ -66,6 +69,7 @@ class CameraRender(private val context: Context, private val callback: Callback)
         recordFilter?.setSize(width, height)
         cameraFilter?.setSize(width, height)
         soulFilter?.setSize(width, height)
+        spiltFilter?.setSize(width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -82,7 +86,8 @@ class CameraRender(private val context: Context, private val callback: Callback)
         // FBO所在图层的纹理id
         val cfID = cameraFilter?.onDrawFrame(textures[0]) // 特效
         val slID = soulFilter?.onDrawFrame(cfID!!) // 特效
-        val edID = recordFilter?.onDrawFrame(slID!!) // 无特效，渲染摄像头
+        val spID = spiltFilter?.onDrawFrame(slID!!)
+        val edID = recordFilter?.onDrawFrame(spID!!) // 无特效，渲染摄像头
         // 主动调用OenGL的数据，编码存储
         mediaRecorder?.fireFrame(edID!!, mCameraTexture!!.timestamp)
     }

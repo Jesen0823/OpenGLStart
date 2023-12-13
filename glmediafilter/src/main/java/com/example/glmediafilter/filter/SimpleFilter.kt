@@ -48,7 +48,7 @@ open class SimpleFilter(context: Context, vertShaderRes: Int, fragShaderRes: Int
         vertexBuffer.put(vertexArray)
 
         textureBuffer.clear()
-        textureBuffer.put(vertexArray)
+        textureBuffer.put(textureArray)
 
         // 读取顶点着色器程序
         val vertexShader = OpenGlUtil.readRawTextFile(context, vertShaderRes)

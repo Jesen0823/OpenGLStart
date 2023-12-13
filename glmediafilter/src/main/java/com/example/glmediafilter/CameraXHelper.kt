@@ -24,15 +24,15 @@ class CameraXHelper {
             preview.setSurfaceProvider(surfaceProvider)
             cameraProvider.unbindAll()
 
-            /*val camera =
+            val camera =
                 cameraProvider.bindToLifecycle(
                     context as LifecycleOwner,
                     CameraSelector.DEFAULT_BACK_CAMERA,
                     imageCapture,
                     preview
-                )*/
-            //val cameraInfo = camera.cameraInfo
-            //val cameraControl = camera.cameraControl
+                )
+            val cameraInfo = camera.cameraInfo
+            val cameraControl = camera.cameraControl
         }, ContextCompat.getMainExecutor(context))
     }
 }
